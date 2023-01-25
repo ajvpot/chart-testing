@@ -22,6 +22,7 @@ import (
 	"strings"
 
 	"github.com/Masterminds/semver"
+	"gopkg.in/yaml.v2"
 
 	"github.com/helm/chart-testing/v3/pkg/config"
 	"github.com/helm/chart-testing/v3/pkg/exec"
@@ -795,12 +796,29 @@ func (t *Testing) CheckVersionIncrement(chart *Chart) error {
 		return err
 	}
 
-	if result >= 0 {
+	if result <= 0 {
+		fmt.Println("Chart version ok.")
+		return nil
+	}
+
+	if !t.config.ExecuteVersionIncrement {
 		return errors.New("chart version not ok. Needs a version bump! ")
 	}
 
-	fmt.Println("Chart version ok.")
-	return nil
+	// execute version increment
+	newVersion, err = util.IncrementVersion(newVersion)
+	if err != nil {
+		return fmt.Errorf("failed to bump chart version: %w", err)
+	}
+
+	// write the new chart
+	chartYaml.Version = newVersion
+	chartBytes, err := yaml.Marshal(chartYaml)
+	if err != nil {
+		return fmt.Errorf("failed to marshal chart when bumping: %w", err)
+	}
+
+	return os.WriteFile(chart.Path(), chartBytes, 0o777)
 }
 
 func (t *Testing) checkBreakingChangeAllowed(chart *Chart) (allowed bool, err error) {
