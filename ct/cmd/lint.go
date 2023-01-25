@@ -18,10 +18,11 @@ import (
 	"fmt"
 
 	"github.com/MakeNowJust/heredoc"
-	"github.com/helm/chart-testing/v3/pkg/chart"
-	"github.com/helm/chart-testing/v3/pkg/config"
 	"github.com/spf13/cobra"
 	flag "github.com/spf13/pflag"
+
+	"github.com/helm/chart-testing/v3/pkg/chart"
+	"github.com/helm/chart-testing/v3/pkg/config"
 )
 
 func newLintCmd() *cobra.Command {
@@ -65,6 +66,7 @@ func addLintFlags(flags *flag.FlagSet) {
 			Enable validation of maintainer account names in chart.yml.
 			Works for GitHub, GitLab, and Bitbucket`))
 	flags.Bool("check-version-increment", true, "Activates a check for chart version increments")
+	flags.Bool("execute-version-increment", false, "Automatically increment the chart version")
 	flags.Bool("validate-chart-schema", true, heredoc.Doc(`
 			Enable schema validation of 'Chart.yaml' using Yamale`))
 	flags.Bool("validate-yaml", true, heredoc.Doc(`

@@ -191,6 +191,15 @@ func CompareVersions(left string, right string) (int, error) {
 	return leftVersion.Compare(rightVersion), nil
 }
 
+func IncrementVersion(old string) (string, error) {
+	oldVersion, err := semver.NewVersion(old)
+	if err != nil {
+		return "", fmt.Errorf("failed parsing semantic version: %w", err)
+	}
+	incrementedVersion := oldVersion.IncPatch()
+	return incrementedVersion.String(), nil
+}
+
 func BreakingChangeAllowed(left string, right string) (bool, error) {
 	leftVersion, err := semver.NewVersion(left)
 	if err != nil {
