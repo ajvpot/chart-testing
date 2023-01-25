@@ -818,7 +818,7 @@ func (t *Testing) CheckVersionIncrement(chart *Chart) error {
 		return fmt.Errorf("failed to marshal chart when bumping: %w", err)
 	}
 
-	return os.WriteFile(chart.Path(), chartBytes, 0o777)
+	return os.WriteFile(chart.Path(), chartBytes, 0o600)
 }
 
 func (t *Testing) checkBreakingChangeAllowed(chart *Chart) (allowed bool, err error) {
